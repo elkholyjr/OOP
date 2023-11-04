@@ -28,7 +28,11 @@ public:
 
     int Sign();
 
-    //plus operator
+    BigReal operator+ (const BigReal& other);
+
+    string addIntegers(string num1, string num2);
+
+    string addStrings(string num1, string num2);
 
     BigReal operator- (const BigReal& other);
 
