@@ -30,8 +30,12 @@ public:
 
     //plus operator
 
-    //minus operator
+    BigReal operator- (const BigReal& other);
 
+    string MinusStrings(string num1, string num2);
+    
+    string subtractIntegers(string num1, string num2);
+    
     bool operator< (const BigReal& other);
 
     bool operator> (const BigReal& other);
