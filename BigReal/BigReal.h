@@ -11,5 +11,36 @@
 using namespace std;
 
 class BigReal {
+private:
+    string realNumber;
+    int sign;
+    bool isValidReal(string realNumber);
+    void strip(string &text);
 
-}
+public:
+    BigReal(double realNumber = 0.0);
+
+    BigReal(string realNumber);
+
+    void setNum(string realNumber);
+
+    int size();
+
+    int Sign();
+
+    //plus operator
+
+    //minus operator
+
+    bool operator< (const BigReal& other);
+
+    bool operator> (const BigReal& other);
+
+    bool operator== (const BigReal& other);
+
+    BigReal& operator= (const BigReal& other);
+
+friend ostream& operator << (std::ostream& out, const BigReal& num);
+friend istream &operator>>(istream &in,BigReal &num);
+};
+#endif
