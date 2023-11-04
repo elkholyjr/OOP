@@ -56,7 +56,102 @@ int BigReal::Sign() {
     return (this->realNumber[0] == '-') ? -1 : 1;
 }
 
-//plus operator
+BigReal BigReal::operator+ (const BigReal& other) {
+    string sum = addStrings(this->realNumber, other.realNumber);
+    if (!isValidReal(sum)) {
+        throw invalid_argument("Sum is not a valid real number");
+    }
+    return BigReal(sum);
+}
+
+string BigReal::addIntegers(string num1, string num2) {
+    // Reverse the strings to make addition easier
+    reverse(num1.begin(), num1.end());
+    reverse(num2.begin(), num2.end());
+
+    string result = "";
+    int carry = 0;
+    int n1 = num1.size();
+    int n2 = num2.size();
+
+    // Loop through each digit, starting from the least significant
+    for (int i = 0; i < max(n1, n2); i++) {
+        int sum = carry;
+        if (i < n1) sum += num1[i] - '0';
+        if (i < n2) sum += num2[i] - '0';
+
+        // Add the current digit to the result
+        result.push_back(sum % 10 + '0');
+
+        // Update the carry
+        carry = sum / 10;
+    }
+
+    // If there's still a carry after the last digit, add it to the result
+    if (carry) result.push_back(carry + '0');
+
+    // Reverse the result to get the final answer
+    reverse(result.begin(), result.end());
+
+    return result;
+}
+
+string BigReal::addStrings(string num1, string num2) {
+    // Check if the numbers are negative
+    bool negative1 = num1[0] == '-';
+    bool negative2 = num2[0] == '-';
+
+    // Remove the negative signs for addition
+    if (negative1) num1 = num1.substr(1);
+    if (negative2) num2 = num2.substr(1);
+
+    // Find the decimal points
+    int decimal1 = num1.find('.');
+    int decimal2 = num2.find('.');
+
+    // If there are no decimal points, add them at the end
+    if (decimal1 == string::npos) {
+        decimal1 = num1.size();
+        num1 += '.';
+    }
+    if (decimal2 == string::npos) {
+        decimal2 = num2.size();
+        num2 += '.';
+    }
+
+    // Add trailing zeros to make the fractional parts the same size
+    int fractionalSize = max(num1.size() - decimal1 - 1, num2.size() - decimal2 - 1);
+    num1 += string(fractionalSize - (num1.size() - decimal1 - 1), '0');
+    num2 += string(fractionalSize - (num2.size() - decimal2 - 1), '0');
+
+    // Remove the decimal points for addition
+    num1.erase(decimal1, 1);
+    num2.erase(decimal2, 1);
+
+    // Add the numbers as before
+    string sum;
+
+    if ((negative1 && negative2) || (!negative1 && !negative2)) {
+        sum = addIntegers(num1, num2);
+        if (negative1 && negative2) {
+            sum = '-' + sum;
+        }
+    } else {
+        sum = subtractIntegers(num1, num2);
+        if (negative1) {
+            sum = '-' + sum;
+        }
+    }
+
+    // Add the decimal point back in
+
+    sum.insert(sum.end() - fractionalSize, '.');
+    if(sum.back()=='.'){
+        sum.pop_back();
+    }
+    return sum;
+    
+}
 
 BigReal BigReal::operator- (const BigReal& other) {
     string subtract = MinusStrings(this->realNumber, other.realNumber);
