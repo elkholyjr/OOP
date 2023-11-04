@@ -58,7 +58,105 @@ int BigReal::Sign() {
 
 //plus operator
 
-//minus operator
+BigReal BigReal::operator- (const BigReal& other) {
+    string subtract = MinusStrings(this->realNumber, other.realNumber);
+    if (!isValidReal(subtract)) {
+        throw invalid_argument("Sum is not a valid real number");
+    }
+    return BigReal(subtract);
+}
+
+string BigReal::subtractIntegers(string num1, string num2) {
+    // Check if num1 is smaller than num2
+    if (num1.size() < num2.size()) {
+        swap(num1, num2);
+    }
+
+    // Reverse the strings to make subtraction easier
+    reverse(num1.begin(), num1.end());
+    reverse(num2.begin(), num2.end());
+
+    string result = "";
+    int carry = 0;
+
+    // Loop through each digit, starting from the least significant
+    for (int i = 0; i < num1.size(); i++) {
+        int sub = ((num1[i]-'0') - (i < num2.size() ? (num2[i]-'0') : 0) - carry);
+
+        // If the subtraction is less than 0, we add 10 to handle borrowing
+        if (sub < 0) {
+            sub += 10;
+            carry = 1;
+        } else {
+            carry = 0;
+        }
+
+        result.push_back(sub + '0');
+    }
+
+    // Reverse the result to get the final answer
+    reverse(result.begin(), result.end());
+
+    // Remove leading zeros
+    result.erase(0, min(result.find_first_not_of('0'), result.size()-1));
+
+    return result;
+}
+
+string BigReal::MinusStrings(string num1, string num2) {
+        // Check if the numbers are negative
+        bool negative1 = num1[0] == '-';
+        bool negative2 = num2[0] == '-';
+
+        // Remove the negative signs for subtraction
+        if (negative1) num1 = num1.substr(1);
+        if (negative2) num2 = num2.substr(1);
+
+        // Find the decimal points
+        int decimal1 = num1.find('.');
+        int decimal2 = num2.find('.');
+
+        // If there are no decimal points, add them at the end
+        if (decimal1 == string::npos) {
+            decimal1 = num1.size();
+            num1 += '.';
+        }
+        if (decimal2 == string::npos) {
+            decimal2 = num2.size();
+            num2 += '.';
+        }
+
+        // Add trailing zeros to make the fractional parts the same size
+        int fractionalSize = max(num1.size() - decimal1 - 1, num2.size() - decimal2 - 1);
+        num1 += string(fractionalSize - (num1.size() - decimal1 - 1), '0');
+        num2 += string(fractionalSize - (num2.size() - decimal2 - 1), '0');
+
+        // Remove the decimal points for subtraction
+        num1.erase(decimal1, 1);
+        num2.erase(decimal2, 1);
+
+        // Subtract the numbers as before
+        string difference;
+
+        if ((negative1 && negative2) || (!negative1 && !negative2)) {
+            difference = subtractIntegers(num1, num2);
+            if (negative1 && negative2) {
+                difference = '-' + difference;
+            }
+        } else {
+            difference = addIntegers(num1, num2);
+            if (negative1) {
+                difference = '-' + difference;
+            }
+        }
+
+        // Add the decimal point back in
+        difference.insert(difference.end() - fractionalSize, '.');
+        if(difference.back()=='.'){
+            difference.pop_back();
+        }
+        return difference;
+}
 
 bool BigReal::operator< (const BigReal& other) {
         // If the signs are different
