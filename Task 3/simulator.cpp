@@ -21,7 +21,9 @@ CPU::CPU() : registers(16, 0), program_counter(0), is_halted(false) {}
 void CPU::load_register(int register_num, int value) {
     registers[register_num] = value;
 }
-
+void CPU::add(int destination, int source1, int source2) {
+    registers[destination] = (registers[source1] + registers[source2]) & 0xFF;
+}
 void CPU::store(int register_num, int address,Memory& memory) {
     if (address == 0x00) {
         // Write to screen
