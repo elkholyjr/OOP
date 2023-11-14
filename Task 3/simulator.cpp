@@ -1,3 +1,40 @@
+#include "Simulator.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+using namespace std;
+
+// Implementation for Instruction class
+Instruction::Instruction(int op, int op1, int op2) : opcode(op), operand1(op1), operand2(op2) {}
+
+// Implementation for Memory class
+Memory::Memory(int size) : main_memory(size, 0), memory(size, 0) {}
+
+void Memory::load_memory(int address, int value) {
+    memory[address] = value;
+    main_memory[address] = value;
+}
+
+// Implementation for CPU class
+CPU::CPU() : registers(16, 0), program_counter(0), is_halted(false) {}
+
+void CPU::load_register(int register_num, int value) {
+    registers[register_num] = value;
+}
+
+void CPU::store(int register_num, int address,Memory& memory) {
+    if (address == 0x00) {
+        // Write to screen
+        cout << "Writing to screen: " << std::hex << registers[register_num] << std::endl;
+    } else {
+        memory.memory[address] = registers[register_num];
+    }
+}
+
+void CPU::move(int source, int destination) {
+    registers[destination] = registers[source];
+}
+
 int Simulator::single_step() {
     if ((cpu.program_counter < memory.memory.size()) && !cpu.is_halted) {
         int instruction = memory.memory[cpu.program_counter];
