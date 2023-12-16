@@ -25,7 +25,7 @@ void CPU::load_register(int register_num, int value) {
 void CPU::store(int register_num, int address,Memory& memory) {
     if (address == 0x00) {
         // Write to screen
-        cout << "Writing to screen: " << std::hex << registers[register_num] << std::endl;
+        cout << "Writing to screen: " << hex << registers[register_num] << endl;
     } else {
         memory.memory[address] = registers[register_num];
     }
@@ -66,8 +66,8 @@ void Simulator::read_instructions_from_file(const std::string& filename) {
         istringstream iss(line);
         int opcode, operand1, operand2;
 
-        if (!(iss >> std::hex >> opcode >> std::hex >> operand1 >> std::hex >> operand2)) {
-            cerr << "Error processing instruction at address " << address << std::endl;
+        if (!(iss >> hex >> opcode >> hex >> operand1 >> hex >> operand2)) {
+            cerr << "Error processing instruction at address " << address << endl;
             continue;
         }
 
