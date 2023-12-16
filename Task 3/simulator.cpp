@@ -36,7 +36,7 @@ void CPU::move(int source, int destination) {
 }
 
 void CPU::add(int destination, int source1, int source2) {
-    registers[destination] = (registers[source1] + registers[source2]) & 0xFF;
+    registers[destination] = (registers[source1] + registers[source2]) ; // & 0xFF
 }
 
 void CPU::jump(int register_num, int address) {
@@ -52,7 +52,7 @@ void CPU::halt() {
 // Implementation for Simulator class
 Simulator::Simulator() : memory(255), cpu() {}
 
-void Simulator::read_instructions_from_file(const std::string& filename) {
+void Simulator::read_instructions_from_file(const string& filename) {
     ifstream file(filename);
     if (!file) {
         cerr << "Unable to open file: " << filename << endl;
